@@ -1,6 +1,7 @@
 # greeter
+![greeter](https://user-images.githubusercontent.com/1110183/222854477-1598b9c8-c7b6-480e-9bc6-fb0aa4324806.gif)
 
-![greeter_cropped2](https://user-images.githubusercontent.com/1110183/222794895-e0e187ef-958a-4f42-9fde-dea831031a8e.gif)
+
 
 Test assignment for build engineer to build CI/CD. Application greets any given names. Names can be provided both ineractively and via command line.
 
