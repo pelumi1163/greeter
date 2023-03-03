@@ -21,19 +21,31 @@ struct Style
 
 const Style NO_STYLE = Style{};
 
+struct StyledText
+{
+    Style style;
+    std::string_view text;
+
+    friend std::ostream& operator << (std::ostream & ostr, const StyledText & styled_text)
+    {
+        return ostr << styled_text.style << styled_text.text << NO_STYLE;
+    }
+};
+
+
 auto getOpions(int argc, char** argv)
 {
     cxxopts::Options options("greeter", "This is a simple greeter app.");
     options.add_options()
             ("h,help", "Print help")
             ("no-style", "Do not style console output", cxxopts::value<bool>()->default_value("false"))
-            ("name", "Name to greet, turns off interactive mode",  cxxopts::value<std::vector<std::string>>());
+            ("name", "Name(s) to greet, turns off interactive mode",  cxxopts::value<std::vector<std::string>>());
 
     auto result = options.parse(argc, argv);
 
     if (result.count("help"))
     {
-        std::cout << "Type your name to be greeted or leave input empty to exit." << options.help() << std::endl;
+        std::cout << options.help() << "In interactive mode type your name to be greeted or leave input empty to exit." << std::endl;
         exit(0);
     }
 
@@ -45,12 +57,9 @@ void greet(std::ostream & ostr, const T& name, std::optional<Style> style)
 {
     ostr << "Hello, ";
     if (style)
-        ostr << *style;
-
-    ostr << name;
-
-    if (style)
-        ostr << NO_STYLE;
+        ostr << StyledText{*style, name};
+    else
+        ostr << name;
 
     ostr << "!" << std::endl;
 }
@@ -62,9 +71,9 @@ int main(int argc, char** argv)
     const std::optional<Style> name_style = options.count("no-style")
         ? std::nullopt
         : std::optional<Style>{Style{
-        .style = rang::style::bold,
-        .bg = rang::bg::red,
-        .fg = rang::fg::gray
+            .style = rang::style::bold,
+            .bg = rang::bg::red,
+            .fg = rang::fg::gray
     }};
 
     if (options.count("name"))
