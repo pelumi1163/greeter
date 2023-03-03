@@ -16,3 +16,6 @@ cmake --build . --target all
 
 ## Dependencies
 C++17-compatitable compiler (preferably clang-13), Ninja (>=1.10), CMake (>=3.5)
+
+# Running
+Just run in terminal
