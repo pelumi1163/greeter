@@ -15,7 +15,7 @@ jobs:
                 newVersion=$((value+1))
                 newVersionString="#define GREETER_VERSION_PATCH $newVersion"
                 echo $newVersionString
-
+                echo "newVersion=$((value+1))" >> "$GITHUB_ENV"
                 replaceStrring="#define GREETER_VERSION_PATCH"
                 sed -i 's/'"$phrase.*"'/'"$newVersionString"'/' version.h
 
@@ -26,5 +26,5 @@ jobs:
               run: |
                 git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
                 git config --global user.email "username@users.noreply.github.com"
-                git commit -a -m "Update GREETER_VERSION_PATCH to  $newVersion"
+                git commit -a -m "Update GREETER_VERSION_PATCH to ${{ env.newVersion }}"
                 git push
