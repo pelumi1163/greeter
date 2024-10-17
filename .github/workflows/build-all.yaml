@@ -1,0 +1,16 @@
+name: Build greeter
+on: pull_request 
+
+jobs: 
+    build-greeter:
+        runs-on : ubunut-latest
+        steps:
+            - uses: actions/checkout@v4
+              with: 
+                submodules: true
+            - run: |
+                mkdir build && cd build
+                cmake .. -GNinja
+                cmake --build . --target all
+
+
