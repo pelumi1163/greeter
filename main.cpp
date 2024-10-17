@@ -1,18 +1,21 @@
 #include <exception>
 #include <iostream>
 #include <ostream>
+#include <sstream>
 #include <string>
 #include <optional>
+#include <format>
 
 #include <rang.hpp>
 #include <cxxopts.hpp>
+
+#include "version.h"
 
 struct Style
 {
     rang::style style = rang::style::reset;
     rang::bg bg = rang::bg::reset;
     rang::fg fg = rang::fg::reset;
-
     friend std::ostream& operator << (std::ostream & ostr, const Style & style)
     {
         return ostr << style.style << style.bg << style.fg;
@@ -39,7 +42,8 @@ auto getOpions(int argc, char** argv)
     options.add_options()
             ("h,help", "Print help")
             ("no-style", "Do not style console output", cxxopts::value<bool>()->default_value("false"))
-            ("name", "Name(s) to greet, turns off interactive mode",  cxxopts::value<std::vector<std::string>>());
+            ("name", "Name(s) to greet, turns off interactive mode",  cxxopts::value<std::vector<std::string>>())
+            ("version", "Version of this program");
 
     auto result = options.parse(argc, argv);
 
@@ -75,6 +79,34 @@ int main(int argc, char** argv)
             .bg = rang::bg::red,
             .fg = rang::fg::gray
     }};
+
+    if (options.count("version"))
+    {
+        const Style version_style = options.count("no-style")
+            ? NO_STYLE
+            : Style{
+                  .style = rang::style::bold,
+                  .bg = rang::bg::black,
+                  .fg = rang::fg::magenta
+              };
+
+        const Style git_hash_style = options.count("no-style")
+            ? NO_STYLE
+            : Style{
+                 .style = rang::style::bold,
+                 .bg = rang::bg::black,
+                 .fg = rang::fg::blue
+             };
+
+        std::cout << StyledText{
+                version_style,
+                std::format("{}.{}.{}.{}", GREETER_VERSION_MAJOR, GREETER_VERSION_MINOR, GREETER_VERSION_PATCH, GREETER_VERSION_BUILD)
+                    + (strlen(GREETER_VERSION_NAME) != 0 ? "-" + std::string(GREETER_VERSION_NAME) : "")
+            }
+                  << " git hash: " << StyledText{git_hash_style, GREETER_GIT_HASH} << std::endl;
+
+        return 0;
+    }
 
     if (options.count("name"))
     {
