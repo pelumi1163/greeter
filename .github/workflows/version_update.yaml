@@ -2,7 +2,7 @@ name: Version Update workflow
 on:
     push:
       branches:
-        - pelumi_tech_interview
+        - ffd
 
 jobs: 
     Update-version:
