@@ -1,0 +1,30 @@
+name: Build greeter
+on:
+    push:
+      branches:
+        - pelumi_tech_interview
+
+jobs: 
+    Update-version:
+        runs-on : ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - run: |
+                str=$(sed -n '/#define GREETER_VERSION_PATCH/p' version.h)
+                value=${str#*PATCH}
+                newVersion=$((value+1))
+                newVersionString="#define GREETER_VERSION_PATCH $newVersion"
+                echo $newVersionString
+
+                replaceStrring="#define GREETER_VERSION_PATCH"
+                sed -i 's/'"$phrase.*"'/'"$newVersionString"'/' version.h
+
+
+            - name: GIT commit and push all changed files
+              env: 
+                CI_COMMIT_AUTHOR: Continuous Integration
+              run: |
+                git config --global user.name "${{ env.CI_COMMIT_AUTHOR }}"
+                git config --global user.email "username@users.noreply.github.com"
+                git commit -a -m "Update GREETER_VERSION_PATCH to  $newVersion"
+                git push
