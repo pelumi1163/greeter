@@ -4,7 +4,7 @@
 #include <sstream>
 #include <string>
 #include <optional>
-#include <format>
+//#include <format>
 
 #include <rang.hpp>
 #include <cxxopts.hpp>
@@ -98,11 +98,12 @@ int main(int argc, char** argv)
                  .fg = rang::fg::blue
              };
 
-        std::cout << StyledText{
-                version_style,
-                std::format("{}.{}.{}.{}", GREETER_VERSION_MAJOR, GREETER_VERSION_MINOR, GREETER_VERSION_PATCH, GREETER_VERSION_BUILD)
-                    + (strlen(GREETER_VERSION_NAME) != 0 ? "-" + std::string(GREETER_VERSION_NAME) : "")
-            }
+        std::stringstream version_stream;
+        version_stream << GREETER_VERSION_MAJOR << "." << GREETER_VERSION_MINOR << "." << GREETER_VERSION_PATCH << "." << GREETER_VERSION_BUILD;
+        if (strlen(GREETER_VERSION_NAME) != 0)
+            version_stream << "-" + std::string(GREETER_VERSION_NAME);
+
+        std::cout << StyledText{version_style, version_stream.str()}
                   << " git hash: " << StyledText{git_hash_style, GREETER_GIT_HASH} << std::endl;
 
         return 0;
