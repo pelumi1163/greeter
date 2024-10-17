@@ -17,7 +17,7 @@ jobs:
                 echo $newVersionString
                 echo "newVersion=$((value+1))" >> "$GITHUB_ENV"
                 replaceStrring="#define GREETER_VERSION_PATCH"
-                sed -i 's/'"$phrase.*"'/'"$newVersionString"'/' version.h
+                sed -i 's/'"$replaceStrring.*"'/'"$newVersionString"'/' version.h
 
 
             - name: GIT commit and push all changed files
