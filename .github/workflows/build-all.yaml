@@ -19,6 +19,7 @@ jobs:
                 path: ./greeter
 
     test-binary:
+        needs: build-greeter
         runs-on : ubuntu-latest        
         steps:
             - uses: actions/download-artifact@master
