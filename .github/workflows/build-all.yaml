@@ -13,5 +13,18 @@ jobs:
                 mkdir build && cd build
                 cmake .. -GNinja
                 cmake --build . --target all
+            - uses: actions/upload-artifact@master
+              with:
+                name: binary-artifact
+                path: ./greeter
 
-
+    test-binary:
+        runs-on : ubuntu-latest        
+        steps:
+            - uses: actions/download-artifact@master
+              with:
+                name: binary-artifact
+                path: .
+            - run: |
+                ./greeter --version
+    
